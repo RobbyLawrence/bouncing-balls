@@ -1,7 +1,0 @@
-/home/rlawren9/planar-graphs/target/debug/build/raylib-sys-a3ea822190f20c8f/out/lib64/libraylib.a
-/home/rlawren9/planar-graphs/target/debug/build/raylib-sys-a3ea822190f20c8f/out/include/raylib.h
-/home/rlawren9/planar-graphs/target/debug/build/raylib-sys-a3ea822190f20c8f/out/include/rlgl.h
-/home/rlawren9/planar-graphs/target/debug/build/raylib-sys-a3ea822190f20c8f/out/include/raymath.h
-/home/rlawren9/planar-graphs/target/debug/build/raylib-sys-a3ea822190f20c8f/out/lib64/pkgconfig/raylib.pc
-/home/rlawren9/planar-graphs/target/debug/build/raylib-sys-a3ea822190f20c8f/out/lib64/cmake/raylib/raylib-config-version.cmake
-/home/rlawren9/planar-graphs/target/debug/build/raylib-sys-a3ea822190f20c8f/out/lib64/cmake/raylib/raylib-config.cmake

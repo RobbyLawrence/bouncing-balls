@@ -12,7 +12,7 @@ pub struct Ball {
 }
 
 impl Ball {
-    pub fn new(x: f32, y: f32, radius: f32, color: Color, v_x: i64, v_y: i64) -> Self {
+    pub fn new(x: f32, y: f32, radius: f32, color: Color, v_x: f32, v_y: f32) -> Self {
         assert!(x > 0.);
         assert!(y > 0.);
         assert!(radius > 0.);

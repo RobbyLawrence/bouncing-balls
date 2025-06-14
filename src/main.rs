@@ -11,13 +11,33 @@ fn main() {
     io::stdin()
         .read_line(&mut line)
         .expect("Failed to read line");
-    let num_balls = line.trim().parse::<i64>().expect("unable to convert to integer");
+    let num_balls = line
+        .trim()
+        .parse::<i64>()
+        .expect("unable to convert to integer");
 
     let (mut rl, thread) = raylib::init().size(960, 720).title("Hello World").build();
     let mut counter = 1;
     let mut balls: Vec<Ball> = Vec::with_capacity(num_balls as usize);
 
-    for _ in 0..
+    let mut rng = rand::rng();
+    let screen_w = 960.;
+    let screen_h = 640.;
+    for _ in 0..num_balls {
+        let x = rng.random_range((0.0 + 10.)..(screen_w - 10.));
+        let y = rng.random_range((0.0 + 10.)..(screen_h - 10.));
+        let v_x: f32 = rng.random_range(-5. ..5.);
+        let v_y: f32 = rng.random_range(-5. ..5.);
+
+        let color = Color::new(
+            rng.random_range(0..=255),
+            rng.random_range(0..=255),
+            rng.random_range(0..=255),
+            rng.random_range(0..=255),
+        );
+
+        balls.push(Ball::new(x, y, 10, color, v_x, v_y));
+    }
 
     while !rl.window_should_close() {
         let mut d = rl.begin_drawing(&thread);
