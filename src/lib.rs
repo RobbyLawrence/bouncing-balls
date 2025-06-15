@@ -1,6 +1,6 @@
 use raylib::prelude::*;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Ball {
     pub x: f32,
     pub y: f32,
@@ -81,5 +81,36 @@ impl Ball {
     /// Draw the ball.
     pub fn draw(&self, d: &mut RaylibDrawHandle) {
         d.draw_circle(self.x as i32, self.y as i32, self.radius, self.color);
+    }
+
+    pub fn update_colors(&self, balls: &mut [Ball]) {
+        if balls.is_empty() {
+            return;
+        }
+
+        let mut min_idx = 0;
+        let mut max_idx = 0;
+        let mut min_v2 = balls[0].v_x.powi(2) + balls[0].v_y.powi(2);
+        let mut max_v2 = min_v2;
+        for (i, ball) in balls.iter().enumerate().skip(1) {
+            let v2 = ball.v_x.powi(2) + ball.v_y.powi(2);
+            if v2 < min_v2 {
+                min_v2 = v2;
+                min_idx = i;
+            }
+            if v2 > max_v2 {
+                max_v2 = v2;
+                max_idx = i;
+            }
+        }
+        for (i, ball) in balls.iter_mut().enumerate() {
+            if i == max_idx {
+                ball.color = Color::GREEN;
+            } else if i == min_idx {
+                ball.color = Color::RED;
+            } else {
+                ball.color = Color::WHITE;
+            }
+        }
     }
 }

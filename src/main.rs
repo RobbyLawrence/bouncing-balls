@@ -1,4 +1,4 @@
-use planar_graph::Ball;
+use bouncing_balls::Ball;
 use rand::Rng;
 use raylib::prelude::*;
 use std::io;
@@ -17,15 +17,15 @@ fn main() {
         .build();
     let screen_w = 960.0;
     let screen_h = 720.0;
-    let radius = 15.;
+    let radius = 30.;
     // 3) Make random balls
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let mut balls: Vec<Ball> = (0..num_balls)
         .map(|_| {
-            let x = rng.gen_range(radius..(screen_w - radius));
-            let y = rng.gen_range(radius..(screen_h - radius));
-            let vx = rng.gen_range(-0.15..0.15);
-            let vy = rng.gen_range(-0.15..0.15);
+            let x = rng.random_range(radius..(screen_w - radius));
+            let y = rng.random_range(radius..(screen_h - radius));
+            let vx = rng.random_range(-0.15..0.15);
+            let vy = rng.random_range(-0.15..0.15);
             let c = Color::WHITESMOKE;
             Ball::new(x, y, radius, c, vx, vy)
         })
@@ -33,7 +33,7 @@ fn main() {
 
     // 4) Main loop
     while !rl.window_should_close() {
-        // A) **Collide first** (resolve impulses at current positions)
+        // collision handling first
         let n = balls.len();
         for i in 0..n {
             for j in (i + 1)..n {
@@ -41,13 +41,15 @@ fn main() {
                 Ball::collide(&mut left[i], &mut right[0]);
             }
         }
-
-        // B) **Then step** (move + wall bounce)
+        // then we can move the balls
         for ball in balls.iter_mut() {
             ball.update(screen_w, screen_h);
         }
-
-        // C) Draw
+        // then we update colors
+        for ball in balls.clone().iter() {
+            ball.update_colors(&mut balls);
+        }
+        // then we can draw the balls
         let mut d = rl.begin_drawing(&thread);
         d.clear_background(Color::BLACK);
         for ball in balls.iter() {

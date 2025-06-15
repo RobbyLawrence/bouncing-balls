@@ -38,6 +38,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967"
 
 [[package]]
+name = "bouncing-balls"
+version = "0.1.0"
+dependencies = [
+ "rand",
+ "raylib",
+]
+
+[[package]]
 name = "cc"
 version = "1.2.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -163,14 +171,6 @@ name = "paste"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
-
-[[package]]
-name = "planar-graph"
-version = "0.1.0"
-dependencies = [
- "rand",
- "raylib",
-]
 
 [[package]]
 name = "ppv-lite86"
