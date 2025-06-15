@@ -2,50 +2,55 @@ use planar_graph::Ball;
 use rand::Rng;
 use raylib::prelude::*;
 use std::io;
-use std::io::*;
-use std::thread;
-use std::thread::current;
 
 fn main() {
-    println!("How many balls would you like? ");
+    // 1) How many balls?
+    print!("How many balls would you like?\n");
     let mut line = String::new();
-    io::stdin()
-        .read_line(&mut line)
-        .expect("Failed to read line");
-    let num_balls = line
-        .trim()
-        .parse::<i64>()
-        .expect("unable to convert to integer");
+    io::stdin().read_line(&mut line).unwrap();
+    let num_balls = line.trim().parse::<usize>().expect("positive integer");
 
-    let (mut rl, thread) = raylib::init().size(960, 720).title("Balls").build();
-    let mut counter = 1;
-    let mut balls: Vec<Ball> = Vec::with_capacity(num_balls as usize);
+    // 2) Raylib setup
+    let (mut rl, thread) = raylib::init()
+        .size(960, 720)
+        .title("Bouncing Balls")
+        .build();
+    let screen_w = 960.0;
+    let screen_h = 720.0;
+    let radius = 15.;
+    // 3) Make random balls
+    let mut rng = rand::thread_rng();
+    let mut balls: Vec<Ball> = (0..num_balls)
+        .map(|_| {
+            let x = rng.gen_range(radius..(screen_w - radius));
+            let y = rng.gen_range(radius..(screen_h - radius));
+            let vx = rng.gen_range(-0.15..0.15);
+            let vy = rng.gen_range(-0.15..0.15);
+            let c = Color::WHITESMOKE;
+            Ball::new(x, y, radius, c, vx, vy)
+        })
+        .collect();
 
-    let mut rng = rand::rng();
-    let screen_w = 960.;
-    let screen_h = 720.;
-
-    for _ in 0..num_balls {
-        let x = rng.random_range((0.0 + 10.)..(screen_w - 10.));
-        let y = rng.random_range((0.0 + 10.)..(screen_h - 10.));
-        let v_x: f32 = rng.random_range(-0.5..0.5);
-        let v_y: f32 = rng.random_range(-0.5..0.5);
-
-        let color = Color::new(
-            rng.random_range(0..=255),
-            rng.random_range(0..=255),
-            rng.random_range(0..=255),
-            rng.random_range(0..=255),
-        );
-        let mut ball = Ball::new(x, y, 10., color.into(), v_x, v_y);
-        balls.push(ball);
-    }
-
+    // 4) Main loop
     while !rl.window_should_close() {
-        let mut d = rl.begin_drawing(&thread);
-        d.clear_background(Color::WHEAT);
+        // A) **Collide first** (resolve impulses at current positions)
+        let n = balls.len();
+        for i in 0..n {
+            for j in (i + 1)..n {
+                let (left, right) = balls.split_at_mut(j);
+                Ball::collide(&mut left[i], &mut right[0]);
+            }
+        }
+
+        // B) **Then step** (move + wall bounce)
         for ball in balls.iter_mut() {
             ball.update(screen_w, screen_h);
+        }
+
+        // C) Draw
+        let mut d = rl.begin_drawing(&thread);
+        d.clear_background(Color::BLACK);
+        for ball in balls.iter() {
             ball.draw(&mut d);
         }
     }
