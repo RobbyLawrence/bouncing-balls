@@ -4,13 +4,11 @@ use raylib::prelude::*;
 use std::io;
 
 fn main() {
-    // 1) How many balls?
     print!("How many balls would you like?\n");
     let mut line = String::new();
     io::stdin().read_line(&mut line).unwrap();
     let num_balls = line.trim().parse::<usize>().expect("positive integer");
 
-    // 2) Raylib setup
     let (mut rl, thread) = raylib::init()
         .size(960, 720)
         .title("Bouncing Balls")
@@ -18,7 +16,7 @@ fn main() {
     let screen_w = 960.0;
     let screen_h = 720.0;
     let radius = 30.;
-    // 3) Make random balls
+
     let mut rng = rand::rng();
     let mut balls: Vec<Ball> = (0..num_balls)
         .map(|_| {
@@ -31,7 +29,6 @@ fn main() {
         })
         .collect();
 
-    // 4) Main loop
     while !rl.window_should_close() {
         // collision handling first
         let n = balls.len();
